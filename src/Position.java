@@ -8,23 +8,23 @@ public class Position {
 
     }
 
+    public int getY() {
+        return row;
+    }
+
     public void setY(int row) {
         this.row = row;
 
+    }
+
+    public int getX() {
+        return column;
     }
 
     public void setX(int column) {
 //        System.out.println(column);
         this.column = column;
 
-    }
-
-    public int getY() {
-        return row;
-    }
-
-    public int getX() {
-        return column;
     }
 
     public boolean equals(Position pos) {

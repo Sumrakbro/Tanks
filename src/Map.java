@@ -2,39 +2,42 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 
 public class Map {
-    int size;
-    char[][] value;
-    HashMap<Integer, ArrayList<int[][]>> hashMap = new HashMap();
+    protected static int size;
+    protected static Wall[][] walls;
     int[][] playerCoordinate;
 
 
-    public Map() throws InvalidMapException, MalformedURLException {
+    public Map() throws InvalidMapException {
         initialize(new Scanner(System.in));
     }
 
 
-    public Map(Scanner scan) throws InvalidMapException, MalformedURLException {
+    public Map(Scanner scan) throws InvalidMapException {
         initialize(scan);
     }
 
-    private void initialize(Scanner scan) throws InvalidMapException, MalformedURLException {
-        ArrayList<Integer[][]> list = new ArrayList<>();
+    public static Wall getBlockAt(int row, int column) {
+        try {
+            return walls[row][column];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return new SteelWall(0, 0);
+
+        }
+    }
+
+    public static Wall[][] getWalls() {
+        return walls;
+    }
+
+    private void initialize(Scanner scan) throws InvalidMapException {
         String str;
         int row = 0;
-        int column = 0;
+        int column;
         int counter = 0;
-        ArrayList<int[][]> steelList = new ArrayList<>();
-        ArrayList<int[][]> brickList = new ArrayList<>();
-        ArrayList<int[][]> treesList = new ArrayList<>();
-        ArrayList<int[][]> waterList = new ArrayList<>();
-        ArrayList<int[][]> roadList = new ArrayList<>();
         try {
             File file = new File("mapFile.txt");
             FileReader fr = new FileReader(file);
@@ -44,7 +47,7 @@ public class Map {
             if (size == 0) {
                 throw new InvalidMapException("Map size can not be zero");
             }
-            value = new char[size][size];
+            walls = new Wall[size][size];
             int count = size * size;
             line = reader.readLine();
             while (line != null && count > 0) {
@@ -54,43 +57,15 @@ public class Map {
                 for (int i = 0; i < str.length(); i++) {
 
                     if (str.charAt(i) == 'P') {
-                        value[row][column] = str.charAt(i);
                         MyPlayer.setPosition(new Position(column, row));
                         playerCoordinate = rowColumnValues(column, row);
+                        walls[row][column] = WallFabric.createWall('C', column, row);
                         column++;
                         counter++;
                         continue;
                     }
                     if (str.charAt(i) != ' ') {
-                        switch (str.charAt(i)) {
-                            case 'S': {
-                                steelList.add(rowColumnValues(column, row));
-                                break;
-                            }
-                            case 'B': {
-                                brickList.add(rowColumnValues(column, row));
-                                break;
-                            }
-                            case 'W': {
-                                waterList.add(rowColumnValues(column, row));
-                                break;
-                            }
-                            case 'T': {
-                                treesList.add(rowColumnValues(column, row));
-                                break;
-                            }
-                            case 'C': {
-                                roadList.add(rowColumnValues(column, row));
-                                break;
-                            }
-                            case 'R':
-                            case 'L':
-                            case 'U':
-                            case 'D': {
-                                throw new InvalidMapException("Not enough map elements");
-                            }
-                        }
-                        value[row][column] = str.charAt(i);
+                        walls[row][column] = WallFabric.createWall(str.charAt(i), column, row);
                         column++;
                         counter++;
                     }
@@ -105,29 +80,16 @@ public class Map {
         if (counter < size * size) {
             throw new InvalidMapException("Not enough map elements");
         }
-        hashMap.put(1, waterList);
-        hashMap.put(2, steelList);
-        hashMap.put(3, brickList);
-        hashMap.put(4, treesList);
-        hashMap.put(5, roadList);
     }
 
     public int getSize() {
         return size;
     }
 
-    public int[][] getPlayerCoordinate() {
-        return playerCoordinate;
-    }
-
-    public char getValueAt(int row, int column) {
-        return value[row][column];
-    }
-
     public void print() {
-        for (int i = 0; i < value.length; i++) {
-            for (int j = 0; j < value[0].length; j++) {
-                System.out.print(value[i][j] + " ");
+        for (int i = 0; i < walls.length; i++) {
+            for (int j = 0; j < walls[0].length; j++) {
+                System.out.print(walls[i][j] + " ");
             }
             System.out.println();
         }
@@ -139,10 +101,5 @@ public class Map {
         temp[0] = new int[]{column, row};
         return temp;
     }
-
-    public ArrayList<int[][]> byKey(int key) {
-        return hashMap.get(key);
-    }
-
-
 }
+

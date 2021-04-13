@@ -1,10 +1,8 @@
-import java.net.MalformedURLException;
-
-public class Trees extends Walls {
-    public Trees() throws MalformedURLException {
-        super();
+public class Trees extends Wall {
+    public Trees(int x, int y) {
+        super('T', x, y);
         this.path = "Battle_City_trees.png";
-        getElement();
+        setTexture();
 
     }
 

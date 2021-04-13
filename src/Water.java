@@ -1,12 +1,8 @@
-import java.net.MalformedURLException;
-
-public class Water extends Walls {
-    public Water() throws MalformedURLException {
-        super();
-
-        this.abilityToMoveForTank = false;
+public class Water extends Wall {
+    public Water(int x, int y) {
+        super('W', x, y);
+        this.isTankCanCross = false;
         this.path = "Battle_City_water.png";
-        getElement();
+        setTexture();
     }
-
 }

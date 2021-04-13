@@ -1,3 +1,4 @@
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -16,6 +17,7 @@ public class GraphicalInterface extends Application {
 
     Scene scene = new Scene(root, map.getSize() * 64, map.getSize() * 64, Color.BLACK);
 
+
     public GraphicalInterface() throws InvalidMapException, MalformedURLException {
     }
 
@@ -26,76 +28,60 @@ public class GraphicalInterface extends Application {
 
     @Override
     public void start(Stage primaryStage) throws MalformedURLException, InvalidMapException {
+
         root.setStyle("-fx-background-color: BLACK");
         scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case UP: {
-                    System.out.println(tank.getPosition());
                     tank.moveUp();
-                    System.out.println(tank.getPosition());
                     break;
                 }
                 case DOWN: {
-                    System.out.println(tank.getPosition());
                     tank.moveDown();
-                    System.out.println(tank.getPosition());
                     break;
                 }
                 case LEFT: {
-                    System.out.println(tank.getPosition());
                     tank.moveLeft();
-                    System.out.println(tank.getPosition());
                     break;
                 }
                 case RIGHT: {
-                    System.out.println(tank.getPosition());
                     tank.moveRight();
-                    System.out.println(tank.getPosition());
                     break;
                 }
-                case SHIFT:
+                case SPACE:
                     bullets.add(tank.fire());
                     break;
             }
-            try {
-                reDraw();
-            } catch (MalformedURLException | InvalidMapException e) {
-                e.printStackTrace();
-            }
         });
-        reDraw();
+
+        AnimationTimer at = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                try {
+                    Thread.sleep(50);
+                    reDraw();
+                } catch (MalformedURLException | InterruptedException e) {
+                    e.printStackTrace();
+                } catch (InvalidMapException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+        at.start();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void addBlocks(int key) throws MalformedURLException {
-        ArrayList<int[][]> list = map.byKey(key);
-        Walls walls;
-        for (int[][] temp : list) {
-            if (key == 1) {
-                walls = new Water();
-            } else if (key == 2) {
-                walls = new SteelWall();
-            } else if (key == 3) {
-                walls = new BrickWall();
-            } else if (key == 4) {
-                walls = new Trees();
-            } else {
-                walls = new Road();
-            }
-            walls.getImageView().setTranslateX(temp[0][0] * 64);
-            walls.getImageView().setTranslateY(temp[0][1] * 64);
-            root.getChildren().add(walls.getImageView());
-        }
-    }
-
-    private void printList(ArrayList<int[][]> list) {
-        for (int[][] arr : list) {
-            for (int[] ar : arr) {
-                for (int i : ar) {
-                    System.out.print(i + " ");
+    private void addBlocks() {
+        for (Wall[] wallArray : Map.getWalls()) {
+            for (Wall wall : wallArray) {
+                if (wall != null) {
+                    Position position = wall.getPosition();
+                    wall.getTexture().setTranslateX(position.getX() * 64);
+                    wall.getTexture().setTranslateY(position.getY() * 64);
+                    root.getChildren().add(wall.getTexture());
                 }
-                System.out.println();
             }
         }
     }
@@ -108,9 +94,14 @@ public class GraphicalInterface extends Application {
 
     private void addBullets() {
         for (Bullet bullet : bullets) {
-            bullet.getImageView().setTranslateX(bullet.getPosition().getX() * 64);
-            bullet.getImageView().setTranslateY((bullet.getPosition().getY() * 64));
-            root.getChildren().add(bullet.getImageView());
+            if (bullet.getStatus() && bullet.isAlive) bullet.fly();
+            if (bullet.isAlive) {
+                bullet.getImageView().setTranslateX(bullet.getPosition().getX() * 64);
+                bullet.getImageView().setTranslateY((bullet.getPosition().getY() * 64));
+                root.getChildren().add(bullet.getImageView());
+                bullet.changeStatus();
+
+            }
         }
     }
 
@@ -118,10 +109,9 @@ public class GraphicalInterface extends Application {
         if (root.getChildren() != null) {
             root.getChildren().clear();
         }
-        for (int i = 1; i <= 5; i++) {
-            addBlocks(i);
-        }
+        addBlocks();
         addTank();
         addBullets();
     }
+
 }

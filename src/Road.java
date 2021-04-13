@@ -1,9 +1,7 @@
-import java.net.MalformedURLException;
-
-public class Road extends Walls {
-    public Road() throws MalformedURLException {
-        super();
+public class Road extends Wall {
+    public Road(int x, int y) {
+        super('C', x, y);
         this.path = "roadWall.jpg";
-        getElement();
+        setTexture();
     }
 }

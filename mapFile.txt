@@ -1,7 +1,13 @@
-5
-P C C S W
-C C C C B
-B W C S S
-S C C C W
-C B C S W
+10
+P C C S W B W C S S
+C C C C B B W C S S
+T T C S S B B T S S
+S C C C W B W T S S
+T B C C W C W C T S
+С C C S T C W C S S
+C C C C T C C C T B
+B T T T T T W T S S
+S C C C W B W T S S
+C B C S W B W C S S
+
 RRRDDRDRDR

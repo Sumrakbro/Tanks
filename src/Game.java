@@ -8,7 +8,7 @@ public class Game {
 
 
     public Game(Map map) throws InvalidMapException {
-        this.map = map;
+        Game.map = map;
 
 
     }
@@ -18,15 +18,7 @@ public class Game {
     }
 
     public void setMap(Map map) {
-        this.map = map;
-    }
-
-    public void addPlayer(Player player) {
-
-        this.player = player;
-        player.setMap(this.map);
-
-
+        Game.map = map;
     }
 
     public static void main(String[] args) throws MalformedURLException {
@@ -51,7 +43,7 @@ public class Game {
                 map.print();
                 int size = map.getSize();
                 System.out.println(size);
-                System.out.println(map.getValueAt(size / 2, size / 2));
+                System.out.println(Map.getBlockAt(size / 2, size / 2));
             } catch (Exception e) {
             }
         }
@@ -116,6 +108,14 @@ public class Game {
             System.out.println("Row: " + playerPosition.getY());
             System.out.println("Col: " + playerPosition.getX());
         }
+
+    }
+
+    public void addPlayer(Player player) {
+
+        this.player = player;
+        player.setMap(map);
+
 
     }
 

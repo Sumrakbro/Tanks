@@ -1,13 +1,11 @@
-import java.net.MalformedURLException;
+public class SteelWall extends Wall {
 
-public class SteelWall extends Walls {
-
-    public SteelWall() throws MalformedURLException {
-        super();
-        this.abilityToMoveForBullet = false;
-        this.abilityToMoveForTank = false;
+    public SteelWall(int x,int y) {
+        super('S',x,y);
+        this.isBulletCanCross = false;
+        this.isTankCanCross = false;
         this.path = "Battle_City_wall.png";
-        getElement();
+        setTexture();
     }
 }
 
