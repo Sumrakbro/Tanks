@@ -1,24 +1,20 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-
-import java.io.File;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class GraphicalInterface extends Application {
     Pane root = new Pane();
     Map map = new Map();
+    Tank tank = new Tank(map.playerCoordinate[0][0], map.playerCoordinate[0][1]);
+    Game game = new Game(map);
+    ArrayList<Bullet> bullets = new ArrayList<>();
 
-
-
-    Scene scene = new Scene(root, map.getSize() * 64,map.getSize() * 64, Color.BLACK);
+    Scene scene = new Scene(root, map.getSize() * 64, map.getSize() * 64, Color.BLACK);
 
     public GraphicalInterface() throws InvalidMapException, MalformedURLException {
     }
@@ -30,67 +26,69 @@ public class GraphicalInterface extends Application {
 
     @Override
     public void start(Stage primaryStage) throws MalformedURLException, InvalidMapException {
-
         root.setStyle("-fx-background-color: BLACK");
-
-
-        for(int i=1;i<=5;i++){
-            addBlocks(i);
-        }
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case UP: {
+                    System.out.println(tank.getPosition());
+                    tank.moveUp();
+                    System.out.println(tank.getPosition());
+                    break;
+                }
+                case DOWN: {
+                    System.out.println(tank.getPosition());
+                    tank.moveDown();
+                    System.out.println(tank.getPosition());
+                    break;
+                }
+                case LEFT: {
+                    System.out.println(tank.getPosition());
+                    tank.moveLeft();
+                    System.out.println(tank.getPosition());
+                    break;
+                }
+                case RIGHT: {
+                    System.out.println(tank.getPosition());
+                    tank.moveRight();
+                    System.out.println(tank.getPosition());
+                    break;
+                }
+                case SHIFT:
+                    bullets.add(tank.fire());
+                    break;
+            }
+            try {
+                reDraw();
+            } catch (MalformedURLException | InvalidMapException e) {
+                e.printStackTrace();
+            }
+        });
+        reDraw();
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    private void addBlocks(int key) throws InvalidMapException, MalformedURLException {
 
-        ArrayList<int[][]> list =  map.byKey(key);
-        for (int[][] temp:list) {
-            if(key == 1){
-                Water waterWall = new Water();
-                waterWall.getImageView().setTranslateX(temp[0][0] * 64);
-                waterWall.getImageView().setTranslateY(temp[0][1] * 64);
-
-                root.getChildren().add(waterWall.getImageView());
-
+    private void addBlocks(int key) throws MalformedURLException {
+        ArrayList<int[][]> list = map.byKey(key);
+        Walls walls;
+        for (int[][] temp : list) {
+            if (key == 1) {
+                walls = new Water();
+            } else if (key == 2) {
+                walls = new SteelWall();
+            } else if (key == 3) {
+                walls = new BrickWall();
+            } else if (key == 4) {
+                walls = new Trees();
+            } else {
+                walls = new Road();
             }
-            else if(key == 2){
-                SteelWall steelWall = new SteelWall();
-                steelWall.getImageView().setTranslateX(temp[0][0] * 64);
-                steelWall.getImageView().setTranslateY(temp[0][1] * 64);
-
-                root.getChildren().add(steelWall.getImageView());
-
-            }
-            else if(key == 3){
-                BrickWall brickWall = new BrickWall();
-                brickWall.getImageView().setTranslateX(temp[0][0] * 64);
-                brickWall.getImageView().setTranslateY(temp[0][1] * 64);
-
-                root.getChildren().add(brickWall.getImageView());
-
-            }
-            else if(key == 4){
-                Trees trees = new Trees();
-                trees.getImageView().setTranslateX(temp[0][0] * 64);
-                trees.getImageView().setTranslateY(temp[0][1] * 64);
-
-                root.getChildren().add(trees.getImageView());
-
-            }
-            else if(key == 5){
-                Road road = new Road();
-                road.getImageView().setTranslateX(temp[0][0] * 64);
-                road.getImageView().setTranslateY(temp[0][1] * 64);
-
-                root.getChildren().add(road.getImageView());
-
-
-            }
-
-
-
+            walls.getImageView().setTranslateX(temp[0][0] * 64);
+            walls.getImageView().setTranslateY(temp[0][1] * 64);
+            root.getChildren().add(walls.getImageView());
         }
-
     }
+
     private void printList(ArrayList<int[][]> list) {
         for (int[][] arr : list) {
             for (int[] ar : arr) {
@@ -100,5 +98,30 @@ public class GraphicalInterface extends Application {
                 System.out.println();
             }
         }
+    }
+
+    private void addTank() {
+        tank.getImageView().setTranslateX(tank.getPosition().getX() * 64);
+        tank.getImageView().setTranslateY((tank.getPosition().getY() * 64));
+        root.getChildren().add(tank.getImageView());
+    }
+
+    private void addBullets() {
+        for (Bullet bullet : bullets) {
+            bullet.getImageView().setTranslateX(bullet.getPosition().getX() * 64);
+            bullet.getImageView().setTranslateY((bullet.getPosition().getY() * 64));
+            root.getChildren().add(bullet.getImageView());
+        }
+    }
+
+    private void reDraw() throws MalformedURLException, InvalidMapException {
+        if (root.getChildren() != null) {
+            root.getChildren().clear();
+        }
+        for (int i = 1; i <= 5; i++) {
+            addBlocks(i);
+        }
+        addTank();
+        addBullets();
     }
 }

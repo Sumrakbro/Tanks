@@ -1,4 +1,7 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,33 +14,27 @@ public class Map {
     HashMap<Integer, ArrayList<int[][]>> hashMap = new HashMap();
     int[][] playerCoordinate;
 
-    public Map() throws InvalidMapException {
-        try {
-            initialize(new Scanner(System.in));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+
+    public Map() throws InvalidMapException, MalformedURLException {
+        initialize(new Scanner(System.in));
     }
 
-    public Map(Scanner scan) throws InvalidMapException {
-        try {
-            initialize(scan);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+
+    public Map(Scanner scan) throws InvalidMapException, MalformedURLException {
+        initialize(scan);
     }
 
     private void initialize(Scanner scan) throws InvalidMapException, MalformedURLException {
+        ArrayList<Integer[][]> list = new ArrayList<>();
         String str;
         int row = 0;
-        int column ;
+        int column = 0;
         int counter = 0;
         ArrayList<int[][]> steelList = new ArrayList<>();
         ArrayList<int[][]> brickList = new ArrayList<>();
         ArrayList<int[][]> treesList = new ArrayList<>();
         ArrayList<int[][]> waterList = new ArrayList<>();
         ArrayList<int[][]> roadList = new ArrayList<>();
-
         try {
             File file = new File("mapFile.txt");
             FileReader fr = new FileReader(file);
@@ -55,11 +52,13 @@ public class Map {
                 str = line;
                 column = 0;
                 for (int i = 0; i < str.length(); i++) {
+
                     if (str.charAt(i) == 'P') {
-                        column++;
-                        counter++;
+                        value[row][column] = str.charAt(i);
                         MyPlayer.setPosition(new Position(column, row));
                         playerCoordinate = rowColumnValues(column, row);
+                        column++;
+                        counter++;
                         continue;
                     }
                     if (str.charAt(i) != ' ') {
@@ -80,14 +79,15 @@ public class Map {
                                 treesList.add(rowColumnValues(column, row));
                                 break;
                             }
+                            case 'C': {
+                                roadList.add(rowColumnValues(column, row));
+                                break;
+                            }
                             case 'R':
                             case 'L':
                             case 'U':
                             case 'D': {
                                 throw new InvalidMapException("Not enough map elements");
-                            }
-                            default: {
-                                roadList.add(rowColumnValues(column, row));
                             }
                         }
                         value[row][column] = str.charAt(i);
@@ -99,8 +99,6 @@ public class Map {
                 count -= size;
                 line = reader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,12 +114,14 @@ public class Map {
 
     public int getSize() {
         return size;
+    }
 
+    public int[][] getPlayerCoordinate() {
+        return playerCoordinate;
     }
 
     public char getValueAt(int row, int column) {
         return value[row][column];
-
     }
 
     public void print() {
@@ -139,8 +139,10 @@ public class Map {
         temp[0] = new int[]{column, row};
         return temp;
     }
+
     public ArrayList<int[][]> byKey(int key) {
         return hashMap.get(key);
     }
+
 
 }

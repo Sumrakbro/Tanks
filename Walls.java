@@ -19,6 +19,7 @@ public abstract class Walls {
         return abilityToMoveForTank;
     }
 
+
     public boolean getAbilityBullet() {
         return abilityToMoveForBullet;
     }
@@ -32,7 +33,6 @@ public abstract class Walls {
         String localUrl = file.toURI().toURL().toString();
         Image image = new Image(localUrl);
         iV = new ImageView(image);
-
     }
 }
 

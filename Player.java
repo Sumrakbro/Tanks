@@ -1,16 +1,21 @@
+import java.net.MalformedURLException;
+
 public interface Player {
-     void moveRight();
+    void moveRight() throws MalformedURLException;
 
 
-     void moveLeft();
+    void moveLeft() throws MalformedURLException;
 
-     void moveUp();
-     void moveDown();
-     void setMap(Map map);
-     Position getPosition();
+    void moveUp() throws MalformedURLException;
+
+    void moveDown() throws MalformedURLException;
+
+    void setMap(Map map);
+
+    Position getPosition();
 
 
-     static void setPosition(Position position) {
+    static void setPosition(Position position) {
 
-     }
+    }
 }

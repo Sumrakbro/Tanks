@@ -1,9 +1,6 @@
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 import java.net.MalformedURLException;
 
-public class SteelWall extends Walls{
+public class SteelWall extends Walls {
 
     public SteelWall() throws MalformedURLException {
         super();

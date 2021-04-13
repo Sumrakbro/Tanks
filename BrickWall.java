@@ -4,7 +4,8 @@ import java.net.MalformedURLException;
 
 public class BrickWall extends Walls {
     private int forDestroy = 4;
-    private static  ImageView removeImageOfWall;
+    private static ImageView removeImageOfWall;
+
     public BrickWall() throws MalformedURLException {
         super();
         this.abilityToMoveForBullet = false;
@@ -13,7 +14,7 @@ public class BrickWall extends Walls {
         getElement();
     }
 
-    private void destroyBrickWall(){
+    private void destroyBrickWall() {
         this.abilityToMoveForBullet = true;
         this.abilityToMoveForTank = true;
         this.iV = removeImageOfWall;
@@ -21,15 +22,15 @@ public class BrickWall extends Walls {
 
 
     //Проверяет есть ли у стены жизнь, если нет, то вызывает метод дестройУолл
-    public void damageWall(){
-        if(forDestroy > 0){
+    public void damageWall() {
+        if (forDestroy > 0) {
             forDestroy--;
-            if(forDestroy == 0){
-            destroyBrickWall();}
+            if (forDestroy == 0) {
+                destroyBrickWall();
+            }
         }
 
     }
-
 
 
 }

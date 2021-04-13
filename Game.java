@@ -7,10 +7,8 @@ public class Game {
     Player player;
 
 
-
     public Game(Map map) throws InvalidMapException {
         this.map = map;
-
 
 
     }
@@ -22,20 +20,21 @@ public class Game {
     public void setMap(Map map) {
         this.map = map;
     }
+
     public void addPlayer(Player player) {
 
         this.player = player;
         player.setMap(this.map);
 
 
-
     }
+
     public static void main(String[] args) throws MalformedURLException {
         Scanner input = new Scanner(System.in);
         String className = input.nextLine();
 
         // Checking the implementation of the Position class
-        if(className.equals("Position")){
+        if (className.equals("Position")) {
             Position p1 = new Position(input.nextInt(), input.nextInt());
             System.out.println(p1);
             p1.setX(5);
@@ -46,19 +45,19 @@ public class Game {
         }
 
         // Checking the implementation of the Map class
-        else if(className.equals("Map")){
-            try{
+        else if (className.equals("Map")) {
+            try {
                 Map map = new Map(input);
                 map.print();
                 int size = map.getSize();
                 System.out.println(size);
-                System.out.println(map.getValueAt(size/2, size/2));
+                System.out.println(map.getValueAt(size / 2, size / 2));
+            } catch (Exception e) {
             }
-            catch(Exception e){}
         }
 
         // Checking the Player interface and the MyPlayer class
-        else if(className.equals("Player")){
+        else if (className.equals("Player")) {
             Player player = new MyPlayer();
             System.out.println(Player.class.isInterface());
             System.out.println(player instanceof Player);
@@ -66,26 +65,24 @@ public class Game {
         }
 
         // Checking the InvalidMapException class
-        else if(className.equals("Exception")){
-            try{
+        else if (className.equals("Exception")) {
+            try {
                 throw new InvalidMapException("Some message");
-            }
-            catch(InvalidMapException e){
+            } catch (InvalidMapException e) {
                 System.out.println(e.getMessage());
             }
         }
 
         // Checking the Game class and all of its components
-        else if(className.equals("Game")){
+        else if (className.equals("Game")) {
 
             // Initialize player, map, and the game
             Player player = new MyPlayer();
             Game game = null;
 
-            try{
+            try {
                 game = new Game(new Map(input));
-            }
-            catch(InvalidMapException e){ // custom exception
+            } catch (InvalidMapException e) { // custom exception
                 System.out.println(e.getMessage());
                 System.exit(0);
             }
@@ -95,9 +92,9 @@ public class Game {
             // Make the player move based on the commands given in the input
             String moves = input.next();
             char move;
-            for(int i=0; i<moves.length(); i++){
+            for (int i = 0; i < moves.length(); i++) {
                 move = moves.charAt(i);
-                switch(move){
+                switch (move) {
                     case 'R':
                         player.moveRight();
                         break;
@@ -121,7 +118,6 @@ public class Game {
         }
 
     }
-
 
 
 }

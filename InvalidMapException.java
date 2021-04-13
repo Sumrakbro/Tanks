@@ -1,8 +1,9 @@
-public class InvalidMapException extends Exception{
+public class InvalidMapException extends Exception {
     InvalidMapException() {
 
     }
-    InvalidMapException(String str){
+
+    InvalidMapException(String str) {
         super(str);
     }
 
