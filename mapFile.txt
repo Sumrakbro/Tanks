@@ -1,0 +1,7 @@
+5
+P C C S W
+C C C C B
+B W C S S
+S C C C W
+C B C S W
+RRRDDRDRDR
